@@ -54,9 +54,10 @@ async function run() {
       const result = await wishes.insertOne(wishDoc);
 
       res.json({
-        id: result.insertedId,
-        link: `http://localhost:${PORT}/wish/${result.insertedId}`
-      });
+  id: result.insertedId,
+  link: `${req.protocol}://${req.get('host')}/wish/${result.insertedId}`
+});
+
     });
 
     // GET: Retrieve wish by ID
