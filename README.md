@@ -6,7 +6,8 @@ Wishify is a full-stack web application that lets users create personalized wish
 
 ## 🌐 Live Demo
 
-👉 [Wishify Live (example link)](https://your-deployment-link.com)
+👉 [Wishify Live (example link)](https://wishifyy.vercel.app/)
+    https://wishifyy.onrender.com
 
 > Replace the above link with your actual deployment URL (e.g. from Render, Vercel, or Railway).
 
