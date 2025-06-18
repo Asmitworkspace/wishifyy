@@ -227,7 +227,11 @@ if (imageInput.files.length > 0) {
   formData.append('image', imageInput.files[0]);
 }
 
-const response = await fetch('http://localhost:3000/api/wishes', {
+const BASE_URL = window.location.origin.includes('localhost')
+  ? 'http://localhost:3000'
+  : 'https://wishifyy.onrender.com';
+
+const response = await fetch(`${BASE_URL}/api/wishes`, {
   method: 'POST',
   body: formData // ✅ No need to set Content-Type manually
 });
