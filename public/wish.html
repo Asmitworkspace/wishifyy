@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Wish 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * { box-sizing: border-box; }
+   body {
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+  color: #34495e;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px; /* more top padding */
+  overflow-y: auto;   /* ✅ allow vertical scroll */
+}
+
+    .card {
+      background: #fff;
+      padding: 3rem 3.5rem;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      animation: fadeInUp 0.8s ease forwards;
+      position: relative;
+      transition: box-shadow 0.3s ease;
+      margin-top: -10px; 
+    }
+    .card:hover {
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18);
+    }
+    .emoji {
+      font-size: 5.5rem;
+      margin-bottom: 1.2rem;
+      filter: drop-shadow(0 3px 4px rgba(0,0,0,0.1));
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+    .emoji:hover {
+      transform: rotate(8deg) scale(1.1);
+    }
+    h2 {
+      margin: 0 0 1rem;
+      font-weight: 700;
+      font-size: 2.25rem;
+      color: #0b3d91;
+      text-shadow: 0 2px 5px rgba(11, 61, 145, 0.15);
+    }
+    p {
+      font-size: 1.3rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+    small {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #7a8ca3;
+      font-size: 0.9rem;
+      gap: 6px;
+    }
+    button {
+      background: #0b3d91;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      border-radius: 35px;
+      cursor: pointer;
+      margin-top: 1.8rem;
+      box-shadow: 0 10px 25px rgba(11, 61, 145, 0.35);
+      transition: background 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+      font-weight: 600;
+      user-select: none;
+      letter-spacing: 0.04em;
+    }
+    button:hover {
+      background: #084080;
+      transform: scale(1.07);
+      box-shadow: 0 12px 30px rgba(8, 64, 128, 0.7);
+    }
+    button + button {
+      margin-top: 12px;
+      background: transparent;
+      color: #0b3d91;
+      box-shadow: none;
+      border: 2px solid #0b3d91;
+    }
+    button + button:hover {
+      background: #0b3d91;
+      color: white;
+      border: none;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: #f39c12;
+      top: -20px;
+      animation: fall 4s infinite;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotateZ(360deg);
+      }
+    }
+    @media (max-width: 520px) {
+      .card {
+        padding: 2rem 2.5rem;
+      }
+      h2 {
+        font-size: 1.75rem;
+      }
+      .emoji {
+        font-size: 4.5rem;
+      }
+      p {
+        font-size: 1.1rem;
+      }
+      button {
+        padding: 12px 24px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="wishCard" role="main" aria-live="polite" aria-atomic="true">
+    <div class="emoji" aria-hidden="true">💌</div>
+    <h2>Loading...</h2>
+    <p>Please wait...</p>
+  </div>
+
+  <script>
+    for (let i = 0; i < 30; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      confetti.style.backgroundColor = ['#f39c12', '#e74c3c', '#9b59b6', '#2ecc71'][i % 4];
+      document.body.appendChild(confetti);
+    }
+  </script>
+
+  <script>
+    async function loadWish() {
+      const id = window.location.pathname.split('/wish/')[1];
+      try {
+        const res = await fetch(`/api/wishes/${id}`);
+        if (!res.ok) throw new Error('Network response was not ok');
+        const data = await res.json();
+
+        const emojiMap = {
+          "birthday": "🎂",
+          "anniversary": "💍",
+          "good luck": "🍀",
+          "general": "💌"
+        };
+
+        const card = document.getElementById('wishCard');
+        if (data.error) {
+          card.innerHTML = `
+            <div class="emoji">💔</div>
+            <h2>Wish Not Found</h2>
+            <p>Sorry, we couldn't find the wish you are looking for.</p>
+            <button onclick="window.location.href='/'" aria-label="Back to Home">Back to Home</button>
+          `;
+          return;
+        }
+
+        card.innerHTML = `
+          <div class="emoji" aria-hidden="true">${emojiMap[data.type.toLowerCase()] || "💌"}</div>
+          <h2>${data.type} Wish for ${data.name}</h2>
+          <p>${data.message}</p>
+          ${data.image ? `<img src="${data.image}" alt="Wish Image" style="max-width:100%; border-radius:15px; margin-top:15px;">` : ''}
+          <small><i class="fa-regular fa-clock"></i> Sent on ${new Date(data.createdAt).toLocaleString()}</small>
+          <button id="copyBtn" aria-label="Copy link to clipboard">📋 Copy Link</button>
+          <button onclick="window.location.href='/'" aria-label="Back to Home">🏠 Back to Home</button>
+        `;
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+          navigator.clipboard.writeText(window.location.href)
+            .then(() => alert('Link copied to clipboard!'))
+            .catch(() => alert('Failed to copy link.'));
+        });
+
+      } catch (err) {
+        const card = document.getElementById('wishCard');
+        card.innerHTML = `
+          <div class="emoji">⚠️</div>
+          <h2>Error Loading Wish</h2>
+          <p>Something went wrong while fetching your wish. Please try again later.</p>
+          <button onclick="window.location.href='/'" aria-label="Back to Home">Back to Home</button>
+        `;
+        console.error(err);
+      }
+    }
+
+    loadWish();
+  </script>
+</body>
+</html>

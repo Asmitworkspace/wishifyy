@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Send Your Wish 🎉</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      max-width: 650px;
+      margin: 40px auto 70px;
+      background: #fff;
+      color: #222;
+      padding: 30px 35px;
+      border-radius: 15px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #1E90FF;
+      text-shadow: 0 1px 4px rgba(30,144,255,0.4);
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 1.2rem;
+      margin-bottom: 0.4rem;
+      color: #333;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 17px;
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      resize: vertical;
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #1E90FF;
+      outline: none;
+      box-shadow: 0 0 10px rgba(30,144,255,0.3);
+    }
+    button, .share-btn {
+      margin-top: 24px;
+      padding: 14px 24px;
+      font-size: 17px;
+      font-weight: 700;
+      border-radius: 35px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.25s ease, transform 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+      text-decoration: none;
+      color: white;
+      box-shadow: 0 5px 15px rgba(30,144,255,0.3);
+      font-family: 'Poppins', sans-serif;
+    }
+    button {
+      background: #1E90FF;
+      width: 100%;
+    }
+    button:hover {
+      background: #0c6cd9;
+      transform: scale(1.07);
+    }
+    .share-container {
+      display: none;
+      margin-top: 25px;
+      justify-content: center;
+      gap: 15px;
+    }
+    .share-btn {
+      flex: 1;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      border-radius: 35px;
+    }
+    .share-btn.whatsapp {
+      background: #25D366; /* WhatsApp green */
+    }
+    .share-btn.twitter {
+      background: #1DA1F2; /* Twitter blue */
+    }
+    #wish-output {
+      margin-top: 30px;
+      background: #f7f9fc;
+      padding: 24px 28px;
+      border-radius: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      box-shadow: 0 0 20px #dce8fc;
+      word-break: break-word;
+      color: #222;
+    }
+    #wish-output p {
+      margin: 0.4em 0;
+    }
+    a {
+      color: #1E90FF;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.9rem;
+      color: #666;
+      font-family: 'Poppins', sans-serif;
+    }
+    footer a {
+      margin: 0 10px;
+      color: #1E90FF;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    /* Small icon */
+    .icon {
+      vertical-align: middle;
+      height: 18px;
+      width: 18px;
+      filter: invert(33%) sepia(87%) saturate(2383%) hue-rotate(186deg) brightness(97%) contrast(91%);
+    }
+  </style>
+</head>
+<body>
+  <h1>Send Your Wish 🎉</h1>
+
+  <label for="name">Recipient's Name:</label>
+  <input type="text" id="name" placeholder="Enter the person's name" />
+
+  <label for="template">Choose a Wish Template:</label>
+  <select id="template">
+    <option value="">-- Select Template --</option>
+    <option value="Birthday">Birthday</option>
+    <option value="Anniversary">Anniversary</option>
+    <option value="General">General</option>
+  </select>
+   
+  <label for="message">Your Wish Message:</label>
+  <textarea id="message" rows="4" placeholder="Write your wish here"></textarea>
+  <label for="image">Upload Image (optional):</label>
+<input type="file" id="image" name="image" accept="image/*" />
+  <button id="sendBtn">Send Wish</button>
+  <div id="wish-output"></div>
+
+  <div class="share-container">
+    <button class="share-btn whatsapp" title="Share on WhatsApp" aria-label="Share on WhatsApp">
+      <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20.52 3.48A11.89 11.89 0 0 0 12 1C6.48 1 2 5.48 2 11c0 2.1.66 4.07 1.77 5.67L2 23l6.54-1.71A10.93 10.93 0 0 0 12 21c5.52 0 10-4.48 10-10 0-2.67-1.11-5.16-2.75-7.52Zm-6.54 14.9a7.91 7.91 0 0 1-4.27-1.25l-.3-.18-3.1.81.83-3.03-.2-.31a7.83 7.83 0 0 1 1.26-9.45 7.92 7.92 0 0 1 7.07-2.16 7.79 7.79 0 0 1 4.48 12.58 7.89 7.89 0 0 1-5.77 3.99Zm4.14-4.46-1.88-.54a.64.64 0 0 0-.61.18l-1.02 1.27a.35.35 0 0 1-.5.06 5.12 5.12 0 0 1-2.22-2.44.33.33 0 0 1 .05-.49l1.17-.88a.6.6 0 0 0 .23-.54l-.02-1.8a.35.35 0 0 0-.35-.34h-.5a.33.33 0 0 0-.34.3 7.88 7.88 0 0 0 .9 3.82 1.58 1.58 0 0 0 1.68.91l2.62-.83a.35.35 0 0 0 .2-.52Z"/>
+      </svg>
+      WhatsApp
+    </button>
+
+    <button class="share-btn twitter" title="Share on Twitter" aria-label="Share on Twitter">
+      <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M23 3a10.9 10.9 0 0 1-3.14.86 5.48 5.48 0 0 0 2.16-3.03 10.93 10.93 0 0 1-3.47 1.33 5.48 5.48 0 0 0-9.34 5 15.54 15.54 0 0 1-11.3-5.73 5.48 5.48 0 0 0 1.7 7.32A5.41 5.41 0 0 1 2 9.71v.07a5.48 5.48 0 0 0 4.4 5.37 5.43 5.43 0 0 1-1.44.18 5.1 5.1 0 0 1-1.03-.1 5.49 5.49 0 0 0 5.11 3.8 10.97 10.97 0 0 1-6.8 2.34A10.7 10.7 0 0 1 1 18.9a15.51 15.51 0 0 0 8.4 2.46c10.08 0 15.6-8.35 15.6-15.6 0-.24 0-.47-.02-.7A11.18 11.18 0 0 0 23 3Z"/>
+      </svg>
+      Twitter
+    </button>
+  </div>
+
+  <footer>
+    Developed by <strong>Asmit Prabhakar</strong> |
+    <a href="https://instagram.com/asmitprabhakar" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a> |
+    <a href="https://linkedin.com/in/asmitprabhakar" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">LinkedIn</a>
+  </footer>
+
+  <script>
+    const templates = {
+      Birthday: "Happy Birthday! Wishing you a fantastic day!",
+      Anniversary: "Happy Anniversary! Wishing you many more years of happiness!",
+      General: "Wishing you all the best!"
+    };
+
+    const templateSelect = document.getElementById('template');
+    const messageBox = document.getElementById('message');
+
+    templateSelect.addEventListener('change', () => {
+      const selected = templateSelect.value;
+      messageBox.value = templates[selected] || '';
+    });
+
+    const sendBtn = document.getElementById('sendBtn');
+    const output = document.getElementById('wish-output');
+    const shareContainer = document.querySelector('.share-container');
+
+    let lastLink = '';
+
+    sendBtn.addEventListener('click', async () => {
+      const name = document.getElementById('name').value.trim();
+      const message = messageBox.value.trim();
+      const type = templateSelect.value;
+
+      if (!name) {
+        alert('Please enter the recipient name.');
+        return;
+      }
+      if (!message) {
+        alert('Please enter a wish message.');
+        return;
+      }
+
+      try {
+        const formData = new FormData();
+formData.append('name', name);
+formData.append('message', message);
+formData.append('type', type);
+
+const imageInput = document.getElementById('image');
+if (imageInput.files.length > 0) {
+  formData.append('image', imageInput.files[0]);
+}
+
+const response = await fetch('http://localhost:3000/api/wishes', {
+  method: 'POST',
+  body: formData // ✅ No need to set Content-Type manually
+});
+
+
+        if (!response.ok) {
+          alert('Failed to send wish');
+          return;
+        }
+
+        const data = await response.json();
+        lastLink = data.link;
+
+        output.innerHTML = `
+          <p>Your wish has been sent! 🎉</p>
+          <p><strong>Sharable Link:</strong> <a href="${lastLink}" target="_blank">${lastLink}</a></p>
+          <p><strong>Preview:</strong> Dear ${name}, ${message}</p>
+          <button id="copyBtn" title="Copy Link to Clipboard">Copy Link 📋</button>
+        `;
+        shareContainer.style.display = 'flex';
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+          navigator.clipboard.writeText(lastLink).then(() => {
+            alert('Link copied to clipboard!');
+          }).catch(() => {
+            alert('Failed to copy link. Please copy manually.');
+          });
+        });
+      } catch (err) {
+        alert('Error sending wish: ' + err.message);
+      }
+    });
+
+    // Share buttons logic
+    const whatsappBtn = document.querySelector('.share-btn.whatsapp');
+    const twitterBtn = document.querySelector('.share-btn.twitter');
+
+    whatsappBtn.addEventListener('click', () => {
+      if (!lastLink) return alert('Send a wish first!');
+      const text = encodeURIComponent(`Check out this wish I sent: ${lastLink}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    });
+
+    twitterBtn.addEventListener('click', () => {
+      if (!lastLink) return alert('Send a wish first!');
+      const text = encodeURIComponent(`Check out this wish I sent!`);
+      const url = encodeURIComponent(lastLink);
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+    });
+  </script>
+</body>
+</html>
